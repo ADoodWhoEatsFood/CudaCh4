@@ -26,17 +26,17 @@ __global__ void sum_dynamic_kernel(int* pIn, int* pOut, size_t numInts)
   if (0 == threadIdx.x && 1 == (1 & numInts))
     ps[numInts - 1] = pIn[numInts - 1];
 
-  size_t prevLogItr{numInts};
-  for (size_t logIterations{blockDim.x}; logIterations > 0; logIterations >>= 1)
+  size_t prevNumThreads{numInts};
+  for (size_t numThreads{blockDim.x}; numThreads > 0; numThreads >>= 1)
   {
-    if (threadIdx.x > logIterations)
+    if (threadIdx.x > numThreads)
       return;
 
-    ps[threadIdx.x] += ps[threadIdx.x + logIterations];
-    if (1 == (prevLogItr & 1))
-      ps[0] += ps[prevLogItr - 1];
+    ps[threadIdx.x] += ps[threadIdx.x + numThreads];
+    if (1 == (prevNumThreads & 1))
+      ps[0] += ps[prevNumThreads - 1];
 
-    prevLogItr = logIterations;
+    prevNumThreads = numThreads;
   }
 
   *pOut = ps[0];
