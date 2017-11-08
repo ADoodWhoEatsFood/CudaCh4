@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export CUDA_BIN_PATH=/usr/local/cuda/bin
+cmake -DCMAKE_BUILD_TYPE=Debug ../..
