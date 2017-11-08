@@ -54,7 +54,7 @@ void demoStaticGlobal()
 
   decrement_static_kernel<<<NUMELS/1024 + 1, 1024>>>();
   if (cudaSuccess != (status = cudaDeviceSynchronize()))
-    throw std::runtime_error{TO_STR("Global static demo:  Failed to copy memory from device to host." << status)};
+    throw std::runtime_error{TO_STR("Global static demo:  Kernel failed to execute properly." << status)};
 
   if (cudaSuccess != (status = cudaMemcpyFromSymbol(h_ints.data(), d_pGlobalInts, h_ints.size() * sizeof(int))))
     throw std::runtime_error{TO_STR("Global static demo:  Failed to copy memory from device to host." << status)};
@@ -62,11 +62,7 @@ void demoStaticGlobal()
   for (int i{0}; i < h_ints.size(); ++i)
   {
     if (h_ints[i] != i)
-    {
-      std::stringstream ss;
-      ss << "Unexpected value in static global array at index " << i << ":  " << h_ints[i];
-      throw std::runtime_error{ss.str()};
-    }
+      throw std::runtime_error{TO_STR("Unexpected value in static global array at index " << i << ":  " << h_ints[i])};
   }
 }
 
@@ -107,17 +103,12 @@ void demoDynamicGlobal()
 
   if (cudaSuccess != (status = cudaFree(d_pInts)))
   {
-    cudaFree(d_pInts);
     throw std::runtime_error{TO_STR("Global dynamic demo:  Failed to free " << h_ints.size() * sizeof(int) << " bytes on the device.")};
   }
 
   for (int i{0}; i < h_ints.size(); ++i)
   {
     if (h_ints[i] != i)
-    {
-      std::stringstream ss;
-      ss << "Unexpected value in dynamic global array at index " << i << ":  " << h_ints[i];
-      throw std::runtime_error{ss.str()};
-    }
+      throw std::runtime_error{TO_STR("Unexpected value in static global array at index " << i << ":  " << h_ints[i])};
   }
 }

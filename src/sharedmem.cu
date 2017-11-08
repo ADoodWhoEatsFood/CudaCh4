@@ -32,6 +32,7 @@ __global__ void sum_dynamic_kernel(const int* pIn, int* pOut, size_t numInts)
     if (threadIdx.x > numThreads)
       return;
 
+    __syncthreads();
     ps[threadIdx.x] += ps[threadIdx.x + numThreads];
     if (1 == (prevNumThreads & 1))
       ps[0] += ps[prevNumThreads - 1];
@@ -46,7 +47,8 @@ void demoDynamicShared()
 {
   std::vector<int> h_ints;
   std::srand(std::time(0));
-  h_ints.resize(std::rand() % 1025); // Don't allocate more than we can bite off in one block
+  //h_ints.resize(std::rand() % 1025); // Don't allocate more than we can bite off in one block
+  h_ints.resize(739); // Don't allocate more than we can bite off in one block
   std::cout << "Allocated " << h_ints.size() << " ints for dynamic shared memory demo.\n";
   for (int i{0}; i < h_ints.size(); ++i)
     h_ints[i] = i + 1;
@@ -67,7 +69,7 @@ void demoDynamicShared()
   if (cudaSuccess != (status = cudaDeviceSynchronize()))
   {
     cudaFree(d_pInts);
-    throw std::runtime_error{TO_STR("Global dynamic demo:  Failed to copy memory from device to host." << status)};
+    throw std::runtime_error{TO_STR("Global dynamic demo:  Kernel failed to execute properly." << status)};
   }
 
   int result{0};
