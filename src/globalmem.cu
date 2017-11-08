@@ -75,7 +75,8 @@ void demoDynamicGlobal()
   std::vector<int> h_ints;
   std::srand(std::time(0));
   h_ints.resize(std::rand() % 5000); // Don't allocate more than 5000 ints
-  std::cout << "Allocated " << h_ints.size() << " ints for dynamic global mem demo.\n";
+  std::cout << "Allocated " << h_ints.size() << " ints for dynamic global memory demo.\n";
+
   for (int i{0}; i < h_ints.size(); ++i)
     h_ints[i] = i + 1;
 
