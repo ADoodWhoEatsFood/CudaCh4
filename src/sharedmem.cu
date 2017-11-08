@@ -15,7 +15,7 @@
 // Defines:
 #define TO_STR(EXPR) ((std::stringstream{} << EXPR).str())
 
-__global__ void sum_dynamic_kernel(int* pIn, int* pOut, size_t numInts)
+__global__ void sum_dynamic_kernel(const int* pIn, int* pOut, size_t numInts)
 {
   extern __shared__ int ps[]; // Automatically points to our shared memory array
   
